@@ -1,0 +1,27 @@
+DATAFLOW - BIGQUERY TO GCS
+
+Instructivo para ejecutar Dataflow que saca datos de una tabla y deja un archivo csv en GCS:
+
+1. Acceder al proyecto 'sod-corp-plp-beta' y a la ruta:
+
+cd /home/facunag/lucho/Dataflow
+
+2. Ejecutar el script que gatilla el job del dataflow con los argumentos para parsearlos en el código:
+
+python dataflow_bqtogcs.py --input 'SELECT count(*) AS Total FROM `sod-corp-plp-beta.dataflow_test.test_2019_01`' \
+                 --output gs://test_dataflow_2019_1/beam_output/ \
+                 --project sod-corp-plp-beta \
+                 --job_name bigquerytoparquet2test \
+                 --staging_location gs://test_dataflow_2019_1/staging_location \
+                 --temp_location gs://test_dataflow_2019_1/temp_location \
+                 --region us-central1 \
+                 --runner DataflowRunner
+
+4. Esto generara un job en la interfaz de Dataflow en GCP
+
+4. Revisar la siguiente ruta que contiene un archivo csv (con formato HDFS) el cual contiene un json
+con el resultado del conteo de la tabla:
+
+Ruta: gs://test_dataflow_2019_1/beam_output/
+Contenido: debería tener un conteo de 1 registro, ya que la tabla es de prueba.
+Ejemplo: {u'Total': 1}
